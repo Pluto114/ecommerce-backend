@@ -8,10 +8,18 @@ spring:
     name: mall-backend # ????
 
   # 1. ??????? (DataSource)
+spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/mall_db?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&useSSL=false
-    username: root # ????????
-    password: Zhaojerry331!
+    # 动态 URL：
+    # 1. 本地运行时：默认连接 localhost:3306/mall_db，SSL 关闭
+    # 2. 云端运行时：通过环境变量自动切换 IP、端口、库名，并开启 SSL
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:mall_db}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&useSSL=${DB_SSL:false}
+    
+    # 动态账号密码：
+    # 部署时会读取 DB_USER 和 DB_PASS 变量，读不到则用后面的默认值（你本地的账号密码）
+    username: ${DB_USER:root}
+    password: ${DB_PASS:Zhaojerry331!}
+    
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   # 2. Redis ?? (???? i)
