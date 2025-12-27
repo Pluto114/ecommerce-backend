@@ -8,7 +8,7 @@ spring:
     name: mall-backend # ????
 
   # 1. ??????? (DataSource)
-spring:
+
   datasource:
     # 动态 URL：
     # 1. 本地运行时：默认连接 localhost:3306/mall_db，SSL 关闭
