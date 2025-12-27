@@ -1,0 +1,49 @@
+# ?????
+server:
+  port: 8080 # ????????
+
+# Spring ????
+spring:
+  application:
+    name: mall-backend # ????
+
+  # 1. ??????? (DataSource)
+  datasource:
+    url: jdbc:mysql://localhost:3306/mall_db?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root # ????????
+    password: Zhaojerry331!
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  # 2. Redis ?? (???? i)
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password:
+      database: 0
+
+# 3. MyBatis-Plus ??
+mybatis-plus:
+  global-config:
+    db-config:
+      # ??????
+      id-type: auto
+  # ?? Mapper.xml ??
+  mapper-locations: classpath:/mapper/*.xml
+  # ????????
+  configuration:
+    map-underscore-to-camel-case: true
+
+# 4. Knife4j ?? (???? b)
+knife4j:
+  enable: true # ?? Knife4j
+  setting:
+    # ??????
+    title: "??????? - API??"
+    description: "VUE+Spring Boot ?????"
+    author: "??"
+    version: "v1.0.0"
+# SpringDoc (Knife4j) API ????
+springdoc:
+  packages-to-scan:
+    - com.sc.mall.controller # ????????? controller ?
