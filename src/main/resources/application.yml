@@ -55,3 +55,14 @@ knife4j:
 springdoc:
   packages-to-scan:
     - com.sc.mall.controller # ????????? controller ?
+    # 5. 阿里云 OSS 配置（读取环境变量，供 AliOssUtil @ConfigurationProperties 绑定）
+aliyun:
+  oss:
+    # 建议 endpoint 带协议：https://oss-cn-beijing.aliyuncs.com
+    endpoint: ${OSS_ENDPOINT}
+    accessKeyId: ${OSS_ACCESS_KEY_ID}
+    accessKeySecret: ${OSS_ACCESS_KEY_SECRET}
+    bucketName: ${OSS_BUCKET_NAME}
+    # 可选：如果你后续绑了自定义域名/CNAME，就配置这个；不配也没关系
+    publicDomain: ${OSS_PUBLIC_DOMAIN:}
+
