@@ -7,6 +7,23 @@ spring:
   application:
     name: mall-backend # ????
 
+
+  mail:
+      # QQ 邮箱的 SMTP 服务器地址
+      host: smtp.qq.com
+      # 端口：QQ邮箱 SSL 用 465，TLS 用 587。这里推荐用默认自动适配，或者显式指定 587
+      port: 587
+      # 读取环境变量
+      username: ${MAIL_USER}
+      password: ${MAIL_PASS}
+      default-encoding: UTF-8
+      properties:
+        mail:
+          smtp:
+            auth: true
+            starttls:
+              enable: true
+              required: true
   # 1. ??????? (DataSource)
 
   datasource:
@@ -52,17 +69,22 @@ knife4j:
     author: "??"
     version: "v1.0.0"
 # SpringDoc (Knife4j) API ????
+# SpringDoc (Knife4j) API 文档
 springdoc:
   packages-to-scan:
-    - com.sc.mall.controller # ????????? controller ?
-    # 5. 阿里云 OSS 配置（读取环境变量，供 AliOssUtil @ConfigurationProperties 绑定）
+    - com.sc.mall.controller
+
+# ==========================================
+# 5. 阿里云 OSS 配置
+# 注意：必须顶格写，不能在 springdoc 下面
+# ==========================================
 aliyun:
   oss:
-    # 建议 endpoint 带协议：https://oss-cn-beijing.aliyuncs.com
+    # 建议 endpoint 带协议，例如：https://oss-cn-beijing.aliyuncs.com
     endpoint: ${OSS_ENDPOINT}
     accessKeyId: ${OSS_ACCESS_KEY_ID}
     accessKeySecret: ${OSS_ACCESS_KEY_SECRET}
     bucketName: ${OSS_BUCKET_NAME}
-    # 可选：如果你后续绑了自定义域名/CNAME，就配置这个；不配也没关系
+    # 可选：自定义域名
     publicDomain: ${OSS_PUBLIC_DOMAIN:}
 
