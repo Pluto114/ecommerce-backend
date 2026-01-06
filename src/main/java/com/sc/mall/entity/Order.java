@@ -90,4 +90,9 @@ public class Order implements Serializable {
     @Schema(description = "更新时间")
     @TableField("update_time")
     private LocalDateTime updateTime;
+
+    @Schema(description = "店铺ID (关联 tb_shop.id)")
+    @TableField("shop_id")
+    private Long shopId;
+
 }

@@ -31,9 +31,19 @@ public class Product implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
+
+
+
+
     @Schema(description = "隶属的商店ID (关联 tb_shop.id)")
     @TableField("shop_id")
     private Long shopId;
+
+    @Schema(description = "分类ID (关联 tb_category.id)")
+    @TableField("category_id")
+    private Long categoryId;
+
+
 
     @Schema(description = "商品名称")
     @TableField("name")
@@ -47,9 +57,15 @@ public class Product implements Serializable {
     @TableField("price")
     private BigDecimal price;
 
-    @Schema(description = "商品主图URL - [加分项]")
+    @Schema(description = "商品主图URL")
     @TableField("main_image_url")
     private String mainImageUrl;
+
+    // 【新增字段 START】
+    @Schema(description = "商品3D模型URL (.glb) - [加分项]")
+    @TableField("model_url")
+    private String modelUrl;
+    // 【新增字段 END】
 
     @Schema(description = "商品库存")
     @TableField("stock")
@@ -66,4 +82,8 @@ public class Product implements Serializable {
     @Schema(description = "更新时间")
     @TableField("update_time")
     private LocalDateTime updateTime;
+
+    // 用于前端列表展示分类名（非数据库字段）
+    @TableField(exist = false)
+    private String categoryName;
 }

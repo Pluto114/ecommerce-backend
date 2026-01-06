@@ -15,28 +15,40 @@ public interface IOrderService extends IService<Order> {
 
     /**
      * 创建订单 (核心事务)
+     * 注意：当前实现为【同一店铺商品】一次结算生成一个订单；
+     * 若购物车混入多个店铺商品，会提示分开结算（后续可升级按店铺拆单）。
+     *
      * @param createDTO 下单参数
      * @return 订单编号
      */
     String createOrder(OrderCreateDTO createDTO);
 
-    /**
-     * 模拟支付
-     * @param orderSn 订单号
-     */
     void payOrder(String orderSn);
 
-    /**
-     * 分页查询我的订单
-     * @param pageNum 页码
-     * @param pageSize 条数
-     * @param status 状态筛选 (可选)
-     * @return 订单VO列表
-     */
     Page<OrderVO> myOrderList(Integer pageNum, Integer pageSize, Integer status);
 
-    /**
-     * 取消订单
-     */
     void cancelOrder(String orderSn);
+
+    void receiveOrder(String orderSn);
+
+    void finishComment(String orderSn);
+
+    void applyRefund(String orderSn, String refundReason);
+
+    void shipOrder(String orderSn);
+
+    void auditRefund(String orderSn, boolean approve, String adminReason);
+
+    /**
+     * 商家订单列表：按【当前选择的店铺 shopId】过滤
+     * shopId 由第1步拦截器注入 ShopContext
+     */
+    Page<OrderVO> merchantOrderList(Integer pageNum, Integer pageSize, Integer status, String orderSn);
+
+    OrderVO myOrderDetail(String orderSn);
+
+    /**
+     * 商家订单详情：按【当前选择的店铺 shopId】过滤
+     */
+    OrderVO merchantOrderDetail(String orderSn);
 }

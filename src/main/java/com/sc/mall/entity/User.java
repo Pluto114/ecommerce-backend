@@ -4,20 +4,14 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import java.io.Serializable;
-import java.time.LocalDateTime;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
-/**
- * <p>
- * 用户表 (三合一)
- * </p>
- *
- * @author 斯聪
- * @since 2025-12-18
- */
+import java.io.Serializable;
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @TableName("tb_user")
@@ -30,15 +24,21 @@ public class User implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    @Schema(description = "用户名 (登录账号)")
+    @Schema(description = "邮箱（登录账号）")
+    @TableField("email")
+    private String email;
+
+    @Schema(description = "用户名/昵称（库内 UNIQUE，登录时也可使用）")
     @TableField("username")
     private String username;
 
-    @Schema(description = "密码 (MD5加密)")
+    @JsonIgnore
+    @Schema(description = "密码 (MD5加密)", accessMode = Schema.AccessMode.WRITE_ONLY)
     @TableField("password")
     private String password;
 
-    @Schema(description = "密码盐值")
+    @JsonIgnore
+    @Schema(description = "密码盐值", accessMode = Schema.AccessMode.WRITE_ONLY)
     @TableField("salt")
     private String salt;
 

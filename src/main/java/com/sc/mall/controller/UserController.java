@@ -85,15 +85,16 @@ public class UserController {
     public Result<String> resetPassword(@PathVariable Long id) {
         User user = new User();
         user.setId(id);
-        // 重置为默认密码 123456
-        user.setPassword(Md5Util.encrypt("123456", null));
+
+        String salt = java.util.UUID.randomUUID().toString().replace("-", "").substring(0, 16);
+        user.setSalt(salt);
+        user.setPassword(Md5Util.encrypt("123456", salt));
 
         boolean success = userService.updateById(user);
-        if (success) {
-            return Result.success("密码已重置为: 123456");
-        }
+        if (success) return Result.success("密码已重置为: 123456");
         return Result.error("操作失败");
     }
+
 
     @Operation(summary = "删除用户")
     @DeleteMapping("/{id}")

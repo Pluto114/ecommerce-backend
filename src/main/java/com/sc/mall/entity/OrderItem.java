@@ -34,6 +34,10 @@ public class OrderItem implements Serializable {
     @TableField("order_id")
     private Long orderId;
 
+    @Schema(description = "店铺ID (关联 tb_shop.id)")
+    @TableField("shop_id")
+    private Long shopId;
+
     @Schema(description = "商品ID (关联 tb_product.id)")
     @TableField("product_id")
     private Long productId;

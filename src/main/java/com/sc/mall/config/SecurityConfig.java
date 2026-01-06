@@ -31,8 +31,18 @@ public class SecurityConfig {
             "/v3/api-docs/**",
             "/auth/login",
             "/auth/register",
-            "/test/**" // 临时放行测试接口，或者你可以把它删掉测试 403
+
+            // ✅ 公开接口放行
+            "/product/public/**",
+            "/category/public/**",
+            "/home/public/**",
+
+            "/test/**",
+            "/auth/**",
+            "/home/public/**"
+
     };
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {

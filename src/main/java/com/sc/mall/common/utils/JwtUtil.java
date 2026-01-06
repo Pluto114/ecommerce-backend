@@ -4,64 +4,61 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 
-@Slf4j
 @Component
 public class JwtUtil {
 
-    // 密钥 (实际开发中应放在 application.yml，且必须足够长，至少32个字符)
-    private static final String SECRET = "ScMallProjectSecurityKeyForJwtTokenGeneration2025";
-    // 过期时间：24小时 (毫秒)
-    private static final long EXPIRATION = 24 * 60 * 60 * 1000L;
+    /**
+     * ✅ 建议部署时配置环境变量 JWT_SECRET
+     * 长度必须足够（HS256 至少 32 字节），下面给了默认值兜底
+     */
+    private static final String SECRET =
+            System.getenv().getOrDefault("JWT_SECRET", "sc-mall-jwt-secret-sc-mall-jwt-secret");
 
-    private final Key key = Keys.hmacShaKeyFor(SECRET.getBytes());
+    // 24小时有效期
+    private static final long EXPIRE_MS = 24L * 60 * 60 * 1000;
+
+    private Key key() {
+        return Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8));
+    }
 
     /**
-     * 生成 Token
-     * @param userId 用户ID
-     * @param username 用户名
-     * @param role 角色
-     * @return Token 字符串
+     * ✅ 兼容你原代码：UserServiceImpl 调用 createToken(id, username, role)
      */
-    public String createToken(Long userId, String username, Integer role) {
+    public String createToken(Long userId, String username, int role) {
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + EXPIRATION);
+        Date exp = new Date(now.getTime() + EXPIRE_MS);
 
         return Jwts.builder()
-                .setSubject(userId.toString()) // 主题存 UserID
-                .claim("username", username)   // 存用户名
-                .claim("role", role)           // 存角色
-                .setIssuedAt(now)              // 签发时间
-                .setExpiration(expiryDate)     // 过期时间
-                .signWith(key, SignatureAlgorithm.HS256) // 签名算法
+                .setSubject(String.valueOf(userId))
+                .claim("username", username)
+                .claim("role", role)
+                .setIssuedAt(now)
+                .setExpiration(exp)
+                .signWith(key(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
     /**
-     * 解析 Token 获取 Claims (包含所有负载信息)
+     * ✅ 兼容你原代码：JwtAuthenticationTokenFilter 调用 parseToken(token)
      */
     public Claims parseToken(String token) {
-        try {
-            return Jwts.parserBuilder()
-                    .setSigningKey(key)
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
-        } catch (Exception e) {
-            log.error("JWT解析失败: {}", e.getMessage());
-            throw new RuntimeException("Token无效或已过期");
-        }
+        return Jwts.parserBuilder()
+                .setSigningKey(key())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 
     /**
-     * 从 Token 中获取 UserID
+     * ✅ 可选：如果你其他地方用了 parse(token)，也一并兼容
      */
-    public Long getUserId(String token) {
-        return Long.parseLong(parseToken(token).getSubject());
+    public Claims parse(String token) {
+        return parseToken(token);
     }
 }

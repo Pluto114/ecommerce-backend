@@ -5,7 +5,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.sc.mall.entity.dto.UserLoginDTO;
 import com.sc.mall.entity.dto.UserRegisterDTO;
 import com.sc.mall.entity.vo.UserLoginVO;
-
+import com.sc.mall.entity.dto.EmailRegisterDTO;
+import com.sc.mall.entity.dto.EmailSendCodeDTO;
+import com.sc.mall.entity.vo.CaptchaVO;
 /**
  * <p>
  * 用户表 (三合一) 服务类
@@ -29,4 +31,9 @@ public interface IUserService extends IService<User> {
      * @return 登录成功信息（含Token）
      */
     UserLoginVO login(UserLoginDTO loginDTO);
+
+    // 新增的：
+    CaptchaVO createCaptcha();
+    void sendEmailCode(EmailSendCodeDTO dto, String clientIp);
+    User registerByEmail(EmailRegisterDTO dto);
 }

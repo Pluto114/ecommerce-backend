@@ -2,4 +2,33 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sc.mall.mapper.CartMapper">
 
+    <resultMap id="BaseResultMap" type="com.sc.mall.entity.Cart">
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="product_id" property="productId" />
+        <result column="quantity" property="quantity" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <select id="selectCartList" resultType="com.sc.mall.entity.vo.CartVO">
+        SELECT
+            c.id,
+            c.product_id AS productId,
+            c.quantity,
+            p.name AS productName,
+            /* 修正点1：数据库字段是 main_image_url */
+            p.main_image_url AS productImage,
+            p.price AS price,
+            /* 修正点2：库存字段是 stock，上架判断逻辑不变 */
+            (CASE WHEN p.id IS NOT NULL AND p.status = 1 AND p.stock > 0 THEN 1 ELSE 0 END) AS valid
+        FROM
+            tb_cart c
+                LEFT JOIN
+            tb_product p ON c.product_id = p.id
+        WHERE
+            c.user_id = #{userId}
+        ORDER BY
+            c.create_time DESC
+    </select>
+
 </mapper>
